@@ -10,7 +10,29 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       testName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      uuid:{
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        unique:true
+      },
+      instruction:{
+        type:Sequelize.STRING,
+        allowNull:false,
+      },
+      duration:{
+        type:Sequelize.INTEGER,
+        allowNull:false,
+      },
+      userId:{
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "uuid",
+        },
       },
       createdAt: {
         allowNull: false,

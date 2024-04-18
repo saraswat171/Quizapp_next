@@ -28,6 +28,15 @@ module.exports = {
       uuid:{
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
+        unique:true,
+      },
+      userId:{
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "uuid",
+        },
       },
       createdAt: {
         allowNull: false,

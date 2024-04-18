@@ -10,14 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+        this.belongsTo(models.User, {foreignKey: 'userId' , as: 'user', targetKey:'uuid'})
     }
   }
   Test.init({
+    uuid:{
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull:false,
+      unique:true
+    },
     testName: {
      type: DataTypes.STRING,
      allowNull:false,
     },
+   
     instruction:{
       type:DataTypes.STRING,
       allowNull:false,
@@ -25,6 +32,14 @@ module.exports = (sequelize, DataTypes) => {
     duration:{
       type:DataTypes.INTEGER,
       allowNull:false
+    },
+    userId:{
+      type:DataTypes.UUID,
+      allowNull:false,
+      references: {
+        model:'Users',
+        key:'uuid'
+      }
     }
   
   }, {

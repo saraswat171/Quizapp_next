@@ -10,10 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.User, {foreignKey: 'userId' , as: 'user', targetKey:'uuid'})
     }
   }
   Question.init({
+    uuid:{
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      unique:true
+    },
     questionname: {
       type:DataTypes.STRING,
       allowNull:false,
@@ -26,13 +31,18 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.ARRAY(DataTypes.STRING),
       allowNull:false,
     },
-    uuid:{
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+  
     marks:{
       type: DataTypes.INTEGER,
       allowNull:false,
+    },
+    userId:{
+      type:DataTypes.UUID,
+      allowNull:false,
+      references: {
+        model:'Users',
+        key:'uuid'
+      }
     }
   }, 
   
