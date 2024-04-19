@@ -4,11 +4,19 @@ const { Test } = require('../models');
 const { User } = require('../models');
 exports.addedTest = async (body, userId) => {
     try {
-        const { testName, instruction, duration } = body;
-        if (!testName || !instruction || !duration) {
-            throw new CustomError('Fields are required', 400)
-        }
-        const newTest = await Test.create({ testName, instruction, duration, userId });
+        // const { testName, instruction, duration } = body;
+        // if (!testName || !instruction || !duration) {
+        //     throw new CustomError('Fields are required', 400)
+        // }
+        const data = body;
+        data.forEach(function(item) {
+            item.userId=userId
+            // console.log("my item=" ,item);
+        });
+        console.log('data: ', data[0]);
+            var newTest;
+            
+             newTest    = (data?.length)>1 ? await Test.bulkCreate(data) : await Test.create(data[0]); 
         console.log('newTest: ', newTest);
 
         return newTest
@@ -42,7 +50,7 @@ exports.fetchedTest = async (req) => {
         //   }
         const option = {
             where: !testsearch?.trim().length ? {} : { testName: { [Op.iRegexp]: testsearch } }, include: [
-                { model: User, as: 'user', where: !search?.trim().length ? {} : { name: { [Op.iRegexp]: search } } }
+                { model: User, as: 'user', where: !search?.trim().length ? {} : { name: { [Op.iRegexp]: search } }  }
             ]
         };
         //  if(search){
@@ -90,6 +98,47 @@ exports.updateTestbyId = async (testId, body) => {
         const {testName , instruction , duration}=body
         // console.log('testName , instruction , duration: ', testName , instruction , duration);
         const testData = await Test.update({testName:testName , instruction:"instruction",duration:duration},{where:{uuid:testId}});
+        console.log('testData: ', testData);
+         
+        return testData
+    }
+
+
+    catch (err) {
+        console.log("dd", err)
+        throw err;
+    }
+};
+
+
+// exports.bulkaddedTest = async (body, userId) => {
+//     try {
+//         const data = body;
+//       data.forEach(function(item) {
+//         item.userId=userId
+//            // console.log("my item=" ,item);
+//           });
+//         console.log('data: ', data);
+//         // if (!testName || !instruction || !duration) {
+//         //     throw new CustomError('Fields are required', 400)
+//         // }
+//          const newTests = await Test.bulkCreate(data);
+//          console.log('newTest: ', newTests);
+
+//         // return newTest
+//     }
+
+
+//     catch (err) {
+//         console.log("dd", err)
+//         throw err;
+//     }
+// };
+
+exports.deleteTestbyId = async (testId, body) => {
+    try {
+       
+        const testData = await Test.destroy({where:{uuid:testId}});
         console.log('testData: ', testData);
          
         return testData
